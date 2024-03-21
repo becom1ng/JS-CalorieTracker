@@ -1,24 +1,41 @@
 class CalorieTracker {
 	#calorieLimit = 0;
-	_totalCalories = 0;
-	_meals = [];
-	_workouts = [];
+	#totalCalories = 0;
+	#meals = [];
+	#workouts = [];
 
 	constructor() {
 		this.#calorieLimit = 2000;
-		this._totalCalories = 0;
-		this._meals = [];
-		this._workouts = [];
+		this.#totalCalories = 0;
+		this.#meals = [];
+		this.#workouts = [];
 	}
 
 	addMeal(meal) {
-		this._meals.push(meal);
-		this._totalCalories += meal.calories;
+		this.#meals.push(meal);
+		this.#totalCalories += meal.calories;
 	}
 	addWorkout(workout) {
-		this._workouts.push(workout);
-		this._totalCalories -= workout.calories;
+		this.#workouts.push(workout);
+		this.#totalCalories -= workout.calories;
 	}
+
+    get totalCalories() {
+        return this.#totalCalories;
+    }
+    get meals() {
+        return this.#meals;
+    }
+    get workouts() {
+        return this.#workouts;
+    }
+    get calorieLimit() {
+        return this.#calorieLimit;
+    }
+
+    set calorieLimit(limit) {
+        this.#calorieLimit = limit;
+    }
 }
 
 class Meal {
@@ -45,6 +62,6 @@ tracker.addMeal(breakfast);
 const run = new Workout('Morning Run', 200);
 tracker.addWorkout(run);
 
-// console.log(tracker._meals);
-// console.log(tracker._workouts);
-// console.log(tracker._totalCalories);
+console.log(tracker.meals);
+console.log(tracker.workouts);
+console.log(tracker.totalCalories);
