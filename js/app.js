@@ -15,6 +15,8 @@ class CalorieTracker {
 		this.#displayCaloriesConsumed();
 		this.#displayCaloriesBurned();
 		this.#displayCaloriesRemaining();
+		this.#displayCaloriesProgress();
+
 	}
 
 	// Public methods
@@ -60,11 +62,18 @@ class CalorieTracker {
 		caloriesRemainingEl.innerHTML = remaining;
 	}
 
+	#displayCaloriesProgress() {
+		const progressEl = document.getElementById('calorie-progress');
+		const width = Math.min(((this.#totalCalories / this.#calorieLimit) * 100), 100);
+		progressEl.style.width = `${width}%`;
+	}
+
 	#render() {
 		this.#displayCaloriesTotal();
 		this.#displayCaloriesConsumed();
 		this.#displayCaloriesBurned();
 		this.#displayCaloriesRemaining();
+		this.#displayCaloriesProgress();
 	}
 
 	// Private props - getter and setters
