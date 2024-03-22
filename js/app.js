@@ -58,10 +58,22 @@ class CalorieTracker {
 	}
 	#displayCaloriesRemaining() {
 		const caloriesRemainingEl = document.getElementById('calories-remaining');
+		const progressEl = document.getElementById('calorie-progress');
 		const remaining = this.#calorieLimit - this.#totalCalories;
 		caloriesRemainingEl.innerHTML = remaining;
-	}
 
+		if (remaining < 0) {
+			caloriesRemainingEl.parentElement.parentElement.classList.remove('bg-light')
+			caloriesRemainingEl.parentElement.parentElement.classList.add('bg-danger')
+			progressEl.classList.remove('bg-success');
+			progressEl.classList.add('bg-danger');
+		} else {
+			caloriesRemainingEl.parentElement.parentElement.classList.remove('bg-danger')
+			caloriesRemainingEl.parentElement.parentElement.classList.add('bg-light')
+			progressEl.classList.remove('bg-danger');
+			progressEl.classList.add('bg-success');
+		}
+	}
 	#displayCaloriesProgress() {
 		const progressEl = document.getElementById('calorie-progress');
 		const width = Math.min(((this.#totalCalories / this.#calorieLimit) * 100), 100);
