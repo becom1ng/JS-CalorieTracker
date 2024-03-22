@@ -22,11 +22,13 @@ class CalorieTracker {
 	addMeal(meal) {
 		this.#meals.push(meal);
 		this.#totalCalories += meal.calories;
+		this.#displayNewItem('meal', meal);
 		this.#render();
 	}
 	addWorkout(workout) {
 		this.#workouts.push(workout);
 		this.#totalCalories -= workout.calories;
+		this.#displayNewItem('workout', workout);
 		this.#render();
 	}
 
@@ -86,6 +88,28 @@ class CalorieTracker {
 			100,
 		);
 		progressEl.style.width = `${width}%`;
+	}
+	#displayNewItem(type, item) {
+		const itemsEl = document.getElementById(`${type}-items`);
+		const itemEl = document.createElement('div');
+		itemEl.classList.add('card', 'my-2');
+		itemEl.setAttribute('data-id', item.id);
+		itemEl.innerHTML = `
+		<div class="card-body">
+		<div class="d-flex align-items-center justify-content-between">
+		  <h4 class="mx-1">${item.name}</h4>
+		  <div
+			class="fs-1 bg-${type === 'meal' ? 'primary' : 'secondary'} text-white text-center rounded-2 px-2 px-sm-5"
+		  >
+		  ${item.calories}
+		  </div>
+		  <button class="delete btn btn-danger btn-sm mx-2">
+			<i class="fa-solid fa-xmark"></i>
+		  </button>
+		</div>
+	  </div>
+		`;
+		itemsEl.appendChild(itemEl);
 	}
 
 	#render() {
