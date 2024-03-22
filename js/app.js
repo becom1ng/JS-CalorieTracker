@@ -31,6 +31,24 @@ class CalorieTracker {
 		this.#displayNewItem('workout', workout);
 		this.#render();
 	}
+	removeMeal(id) {
+		const index = this.#meals.findIndex((meal) => meal.id === id);
+		if (index != -1) {
+			const meal = this.#meals[index];
+			this.#totalCalories -= meal.calories;
+			this.#meals.splice(index, 1);
+			this.#render();
+		}
+	}
+	removeWorkout(id) {
+		const index = this.#workouts.findIndex((workout) => workout.id === id);
+		if (index != -1) {
+			const workout = this.#workouts[index];
+			this.#totalCalories += workout.calories;
+			this.#workouts.splice(index, 1);
+			this.#render();
+		}
+	}
 
 	// Private methods
 	#displayCaloriesTotal() {
@@ -99,7 +117,9 @@ class CalorieTracker {
 		<div class="d-flex align-items-center justify-content-between">
 		  <h4 class="mx-1">${item.name}</h4>
 		  <div
-			class="fs-1 bg-${type === 'meal' ? 'primary' : 'secondary'} text-white text-center rounded-2 px-2 px-sm-5"
+			class="fs-1 bg-${
+				type === 'meal' ? 'primary' : 'secondary'
+			} text-white text-center rounded-2 px-2 px-sm-5"
 		  >
 		  ${item.calories}
 		  </div>
@@ -166,6 +186,12 @@ class App {
 		document
 			.getElementById('workout-form')
 			.addEventListener('submit', this.#newItem.bind(this, 'workout'));
+		document
+			.getElementById('meal-items')
+			.addEventListener('click', this.#removeitem.bind(this, 'meal'));
+		document
+			.getElementById('workout-items')
+			.addEventListener('click', this.#removeitem.bind(this, 'workout'));
 	}
 
 	#newItem(type, e) {
@@ -193,6 +219,23 @@ class App {
 
 		const collapse = document.getElementById(`collapse-${type}`);
 		bootstrap.Collapse.getInstance(collapse).hide();
+	}
+
+	#removeitem(type, e) {
+		if (
+			e.target.classList.contains('delete') ||
+			e.target.classList.contains('fa-xmark')
+		) {
+			if (confirm('Are you sure?')) {
+				const id = e.target.closest('.card').getAttribute('data-id');
+				
+				type === 'meal'
+					? this.#tracker.removeMeal(id)
+					: this.#tracker.removeWorkout(id);
+
+				e.target.closest('.card').remove();
+			}
+		}
 	}
 }
 
