@@ -49,6 +49,11 @@ class CalorieTracker {
 			this.#render();
 		}
 	}
+	setLimit(limit) {
+		this.#calorieLimit = limit;
+		this.#displayCaloriesLimit();
+		this.#render();
+	}
 	reset() {
 		this.#totalCalories = 0;
 		this.#meals = [];
@@ -208,6 +213,9 @@ class App {
 		document
 			.getElementById('reset')
 			.addEventListener('click', this.#reset.bind(this));
+		document
+			.getElementById('limit-form')
+			.addEventListener('submit', this.#setLimit.bind(this));
 	}
 
 	#newItem(type, e) {
@@ -265,6 +273,24 @@ class App {
 				item.style.display = 'none';
 			}
 		});
+	}
+
+	#setLimit(e) {
+		e.preventDefault();
+
+		const limit = document.getElementById('limit');
+
+		if (limit.value === '' || limit.value == 0) {
+			alert('Please enter a calorie limit.');
+			return;
+		};
+
+		this.#tracker.setLimit(+limit.value);
+		limit.value = '';
+
+		const modalEl = document.getElementById('limit-modal');
+		const modal = bootstrap.Modal.getInstance(modalEl);
+		modal.hide();
 	}
 
 	#reset() {
