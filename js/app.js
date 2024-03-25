@@ -49,6 +49,12 @@ class CalorieTracker {
 			this.#render();
 		}
 	}
+	reset() {
+		this.#totalCalories = 0;
+		this.#meals = [];
+		this.#workouts = [];
+		this.#render();
+	}
 
 	// Private methods
 	#displayCaloriesTotal() {
@@ -107,6 +113,7 @@ class CalorieTracker {
 		);
 		progressEl.style.width = `${width}%`;
 	}
+	// TODO: Fix card styling to be flexible (bootstrap grid)
 	#displayNewItem(type, item) {
 		const itemsEl = document.getElementById(`${type}-items`);
 		const itemEl = document.createElement('div');
@@ -115,7 +122,7 @@ class CalorieTracker {
 		itemEl.innerHTML = `
 		<div class="card-body">
 		<div class="d-flex align-items-center justify-content-between">
-		  <h4 class="mx-1">${item.name}</h4>
+		  <h4 class="mx-1" style="width: 30%">${item.name}</h4>
 		  <div
 			class="fs-1 bg-${
 				type === 'meal' ? 'primary' : 'secondary'
@@ -192,6 +199,15 @@ class App {
 		document
 			.getElementById('workout-items')
 			.addEventListener('click', this.#removeitem.bind(this, 'workout'));
+		document
+			.getElementById('filter-meals')
+			.addEventListener('keyup', this.#filterItems.bind(this, 'meal'));
+		document
+			.getElementById('filter-workouts')
+			.addEventListener('keyup', this.#filterItems.bind(this, 'workout'));
+		document
+			.getElementById('reset')
+			.addEventListener('click', this.#reset.bind(this));
 	}
 
 	#newItem(type, e) {
@@ -228,7 +244,7 @@ class App {
 		) {
 			if (confirm('Are you sure?')) {
 				const id = e.target.closest('.card').getAttribute('data-id');
-				
+
 				type === 'meal'
 					? this.#tracker.removeMeal(id)
 					: this.#tracker.removeWorkout(id);
@@ -236,6 +252,27 @@ class App {
 				e.target.closest('.card').remove();
 			}
 		}
+	}
+
+	#filterItems(type, e) {
+		const text = e.target.value.toLowerCase();
+		document.querySelectorAll(`#${type}-items .card`).forEach((item) => {
+			const name = item.firstElementChild.firstElementChild.textContent;
+
+			if (name.toLowerCase().indexOf(text) !== -1) {
+				item.style.display = 'block';
+			} else {
+				item.style.display = 'none';
+			}
+		});
+	}
+
+	#reset() {
+		this.#tracker.reset();
+		document.getElementById('meal-items').innerHTML = '';
+		document.getElementById('workout-items').innerHTML = '';
+		document.getElementById('filter-meals').value = '';
+		document.getElementById('filter-workouts').value = '';
 	}
 }
 
