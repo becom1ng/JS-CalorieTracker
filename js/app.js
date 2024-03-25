@@ -16,6 +16,8 @@ class CalorieTracker {
 		this.#displayCaloriesBurned();
 		this.#displayCaloriesRemaining();
 		this.#displayCaloriesProgress();
+
+		document.getElementById('limit').value = this.#calorieLimit;
 	}
 
 	// Public methods
@@ -67,6 +69,7 @@ class CalorieTracker {
 		this.#totalCalories = 0;
 		this.#meals = [];
 		this.#workouts = [];
+		Storage.clearAll();
 		this.#render();
 	}
 	loadItems() {
@@ -133,7 +136,7 @@ class CalorieTracker {
 		);
 		progressEl.style.width = `${width}%`;
 	}
-	// TODO: Fix card styling to be flexible (bootstrap grid)
+	// TODO: Fix card styling to be flexible (bootstrap grid?)
 	#displayNewItem(type, item) {
 		const itemsEl = document.getElementById(`${type}-items`);
 		const itemEl = document.createElement('div');
@@ -266,6 +269,12 @@ class Storage {
 		const workouts = Storage.getWorkouts();
 		const updatedWorkouts = workouts.filter((workout) => workout.id !== id);
 		localStorage.setItem('workouts', JSON.stringify(updatedWorkouts));
+	}
+
+	static clearAll() {
+		localStorage.removeItem('meals');
+		localStorage.removeItem('workouts');
+		localStorage.removeItem('totalCalories');
 	}
 }
 
