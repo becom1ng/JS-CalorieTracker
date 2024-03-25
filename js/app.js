@@ -5,7 +5,7 @@ class CalorieTracker {
 	#workouts = [];
 
 	constructor() {
-		this.#calorieLimit = 1900;
+		this.#calorieLimit = Storage.getCalorieLimit();
 		this.#totalCalories = 0;
 		this.#meals = [];
 		this.#workouts = [];
@@ -51,6 +51,7 @@ class CalorieTracker {
 	}
 	setLimit(limit) {
 		this.#calorieLimit = limit;
+		Storage.setCalorieLimit(limit);
 		this.#displayCaloriesLimit();
 		this.#render();
 	}
@@ -186,6 +187,22 @@ class Workout {
 	}
 }
 
+class Storage {
+	static getCalorieLimit(defaultLimit = 2000) {
+		let calorieLimit;
+		if (localStorage.getItem('calorieLimit') === null) {
+			calorieLimit = defaultLimit;
+		} else {
+			calorieLimit = +localStorage.getItem('calorieLimit');
+		}
+		return calorieLimit;
+	}
+
+	static setCalorieLimit(calorieLimit) {
+		localStorage.setItem('calorieLimit', calorieLimit);
+	}
+}
+
 class App {
 	#tracker = undefined;
 
@@ -283,7 +300,7 @@ class App {
 		if (limit.value === '' || limit.value == 0) {
 			alert('Please enter a calorie limit.');
 			return;
-		};
+		}
 
 		this.#tracker.setLimit(+limit.value);
 		limit.value = '';
